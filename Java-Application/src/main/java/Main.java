@@ -1,17 +1,21 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.lang.reflect.Type;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        // Constants
+        final String messageTopic = "/chat/messages";
+        final String systemTopic = "/chat/system";
+        final String connectionMessage = "connected";
+        final String disconnectionMessage = "disconnected";
+        final int defaultQualityOfService = 0;
+
 
         // Broker info
         String broker = "tcp://mqtt.eclipse.org:1883";
@@ -36,11 +40,11 @@ public class Main {
 
             // Connect to broker and publish to administrator
             client.connect(options);
-            Message connectedMessage = new Message("/chat/system", "connected", 0, clientId);
-            connectedMessage.sendMessage(client);
+            Message connectedMessage = new Message(systemTopic, connectionMessage, defaultQualityOfService, clientId);
+            MessageDispatcher.sendMessage(client, connectedMessage);
 
             // Subscribe to topic
-            client.subscribe("/chat/messages", (topic, message) -> receiveMessage(message.toString()));
+            client.subscribe(messageTopic, (topic, message) -> MessageDispatcher.receiveMessage(message.toString()));
 
             while(scanner.hasNextLine()) {
                 // Read message from System.in
@@ -49,15 +53,15 @@ public class Main {
                 // Check if user has finished chatting
                 if(messageToBeSent.equals("QUIT")) {
                     // Disconnect and publish to administrator
-                    Message disconnectMessage = new Message("/chat/system", "disconnected", 0, clientId);
-                    disconnectMessage.sendMessage(client);
+                    Message disconnectMessage = new Message(systemTopic, disconnectionMessage, defaultQualityOfService, clientId);
+                    MessageDispatcher.sendMessage(client, disconnectMessage);
                     client.disconnect();
                     System.exit(0);
                 }
 
                 // Create and publish message
-                Message message = new Message("/chat/messages", messageToBeSent, 0, clientId);
-                message.sendMessage(client);
+                Message message = new Message(messageTopic, messageToBeSent, defaultQualityOfService, clientId);
+                MessageDispatcher.sendMessage(client, message);
 
             }
 
@@ -69,13 +73,4 @@ public class Main {
         }
 
     }
-
-    // Receive message callback function
-    private static void receiveMessage(String message) {
-        Type typeOfHashMap = new TypeToken<Map<String, String>>(){}.getType();
-        Map<String, String> messageInfo = new Gson().fromJson(message, typeOfHashMap);
-
-        System.out.println(messageInfo.get("sender") + ": " + messageInfo.get("content") + " " + messageInfo.get("timestamp"));
-    }
-
 }

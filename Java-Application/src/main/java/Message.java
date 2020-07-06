@@ -1,6 +1,4 @@
 import com.google.gson.Gson;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.text.DateFormat;
@@ -11,14 +9,22 @@ import java.util.Map;
 
 public class Message {
 
-    private String topic;
+    private final String topic;
 
-    private MqttMessage message = new MqttMessage();
+    private final MqttMessage message = new MqttMessage();
 
     public Message(String topic, String content, int qos, String clientId) {
         this.topic = topic;
         message.setQos(qos);
         message.setPayload(generateMessagePayload(content, clientId, generateTimeStamp()));
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public MqttMessage getMessage() {
+        return message;
     }
 
     // Generate timestamp from current time
@@ -40,18 +46,6 @@ public class Message {
         Gson gson = new Gson();
 
         return gson.toJson(messageInfo).getBytes();
-    }
-
-    // Send message
-    public void sendMessage(MqttClient client) {
-        try {
-            client.publish(topic, message);
-        } catch (MqttException e) {
-            System.out.println("Cause -> " + e.getCause());
-            System.out.println("Message -> " + e.getMessage());
-            System.out.println("Reason Code -> " + e.getReasonCode());
-            e.printStackTrace();
-        }
     }
 
 }

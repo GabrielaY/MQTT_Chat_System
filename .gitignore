@@ -1,1 +1,4 @@
 **/.DS_Store
+Java-Application/.idea/*
+Java-Application/target/*
+Java-Application/*.iml
