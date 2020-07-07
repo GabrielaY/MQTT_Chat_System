@@ -3,3 +3,4 @@ Java-Application/.idea/*
 Java-Application/target/*
 Java-Application/*.iml
 Python-Application/Pipfile.lock
+Python-Application/.idea/*
