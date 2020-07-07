@@ -10,12 +10,13 @@ public class Main {
     public static void main(String[] args) {
 
         // Constants
-        final String messageTopic = "/chat/messages";
         final String systemTopic = "/chat/system";
+        final String systemRequestTopic = "/chat/system/request";
         final String connectionMessage = "connected";
+        final String messageTopic = "/chat/messages";
         final String disconnectionMessage = "disconnected";
         final int defaultQualityOfService = 0;
-
+        Object syncObject = new Object();
 
         // Broker info
         String broker = "tcp://mqtt.eclipse.org:1883";
@@ -27,6 +28,7 @@ public class Main {
         // Client info
         System.out.println("Enter username: ");
         String clientId = scanner.nextLine();
+        final String responseTopic = "/chat/" + clientId + "/response";
 
         try {
             // Create client
@@ -43,9 +45,22 @@ public class Main {
             Message connectedMessage = new Message(systemTopic, connectionMessage, defaultQualityOfService, clientId);
             MessageDispatcher.sendMessage(client, connectedMessage);
 
-            // Subscribe to topic
-            client.subscribe(messageTopic, (topic, message) -> MessageDispatcher.receiveMessage(message.toString()));
+            // Subscribe to response topic
+            client.subscribe(responseTopic, (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(),client, syncObject));
 
+            // Try to join group topic
+            final String requestAccessMessage = "Join request";
+            Message requestMessage = new Message(systemRequestTopic, requestAccessMessage, defaultQualityOfService, clientId);
+            MessageDispatcher.sendMessage(client, requestMessage);
+
+            // Wait for response
+            synchronized(syncObject) {
+                try {
+                    syncObject.wait();
+                } catch (InterruptedException e) {
+                    // Happens if someone interrupts your thread.
+                }
+            }
             while(scanner.hasNextLine()) {
                 // Read message from System.in
                 String messageToBeSent = scanner.nextLine();
