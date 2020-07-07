@@ -21,11 +21,28 @@ public class MessageDispatcher {
     }
 
     // Receive message
-    public static void receiveMessage(String message) {
+    public static void receiveMessage(String msg_topic, String payload_message, MqttClient client, Object syncObject) throws MqttException {
         Type typeOfHashMap = new TypeToken<Map<String, String>>(){}.getType();
-        Map<String, String> messageInfo = new Gson().fromJson(message, typeOfHashMap);
-
-        System.out.println(messageInfo.get("sender") + ": " + messageInfo.get("content") + " " + messageInfo.get("timestamp"));
+        Map<String, String> messageInfo = new Gson().fromJson(payload_message, typeOfHashMap);
+        if(msg_topic.equals("/chat/" + client.getClientId() + "/response")){
+            if(messageInfo.get("content").equals("yes")){
+                System.out.println("Joined group chat");
+                client.subscribe("/chat/messages", (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(),client, syncObject));
+                synchronized(syncObject) {
+                    syncObject.notify();
+                }
+            }
+            else {
+                System.out.println("Access denied!");
+                Message disconnectMessage = new Message("/chat/system", "disconnected", 0, client.getClientId());
+                MessageDispatcher.sendMessage(client, disconnectMessage);
+                client.disconnect();
+                System.exit(-1);
+            }
+        }
+        else{
+            System.out.println(messageInfo.get("sender") + ": " + messageInfo.get("content") + " " + messageInfo.get("timestamp"));
+        }
     }
 
 }
