@@ -32,13 +32,13 @@ while True:
     if text == "QUIT":
         message = json.dumps(
             {"content": "disconnected",
-             "sender": python_client.client_id.decode("utf-8"),
+             "sender": python_client._client_id.decode("utf-8"),
              "timestamp": datetime.now().strftime("%T")})
         python_client.publish("/chat/system", message)
         break
     message = json.dumps(
         {"content": text,
-         "sender": python_client.client_id.decode("utf-8"),
+         "sender": python_client._client_id.decode("utf-8"),
          "timestamp": datetime.now().strftime("%T")})
     python_client.publish("/chat/messages", message)
 
