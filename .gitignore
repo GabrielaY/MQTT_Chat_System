@@ -1,6 +1,6 @@
 **/.DS_Store
-Java-Application/.idea/*
+**/.idea/*
 Java-Application/target/*
 Java-Application/*.iml
 Python-Application/Pipfile.lock
-Python-Application/.idea/*
+Python-Application/**/__pycache__/*
