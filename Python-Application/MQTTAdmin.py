@@ -29,13 +29,12 @@ def on_message(self, userdata, msg):
     received_message = json.loads(str(msg.payload.decode("utf-8")))
 
     if msg.topic == topics.system_request_topic:
-        print("in")
+
         if received_message["sender"][:1] == "a":
             response = create_message(system_messages.approve_join_text, None)
 
         else:
             response = create_message(system_messages.deny_join_text, None)
-            print("not approved")
 
         response_topic = "/chat/" + received_message["sender"] + "/response"
         admin.publish(response_topic, response)
