@@ -9,16 +9,19 @@ message ChatMessage {
     required string timestamp = 3;
 
 }
-message Topics{
+message Topics {
   optional string chat_topic = 1 [default = "/chat/messages"];
   optional string system_topic = 2 [default = "/chat/system"];
   optional string system_request_topic = 3 [default = "/chat/system/request"];
 
 }
-message SystemMessages{
+message SystemMessages {
   optional string connected_text = 1 [default = "connected"];
   optional string disconnected_text = 2 [default = "disconnected"];
   optional string joined_text = 3 [default = "Joined group chat"];
   optional string access_denied_text = 4 [default = "Access denied!"];
+  optional string request_join_text = 5 [default = "Join request"];
+  optional string approve_join_text = 6 [default = "yes"];
+  optional string deny_join_text = 7 [default = "no"];
 
 }
