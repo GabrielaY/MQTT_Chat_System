@@ -1,0 +1,24 @@
+syntax = "proto2";
+// Not necessary for Python but should still be declared to avoid name collisions
+// in the Protocol Buffers namespace and non-Python languages
+package message;
+
+message ChatMessage {
+    optional string sender = 1;
+    required string content = 2;
+    required string timestamp = 3;
+
+}
+message Topics{
+  optional string chat_topic = 1 [default = "/chat/messages"];
+  optional string system_topic = 2 [default = "/chat/system"];
+  optional string system_request_topic = 3 [default = "/chat/system/request"];
+
+}
+message SystemMessages{
+  optional string connected_text = 1 [default = "connected"];
+  optional string disconnected_text = 2 [default = "disconnected"];
+  optional string joined_text = 3 [default = "Joined group chat"];
+  optional string access_denied_text = 4 [default = "Access denied!"];
+
+}
