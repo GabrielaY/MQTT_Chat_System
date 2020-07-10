@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 import paho.mqtt.client as mqtt
 import ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
-from google.protobuf.json_format import MessageToDict, MessageToJson
+from google.protobuf.json_format import MessageToJson
 
 # from MQTTClient import topics, system_messages, create_message
 
@@ -20,11 +20,12 @@ def create_message(content, sender_name):
 
 # The callback for when the admin receives a CONNACK response from the server.
 def on_connect(self, userdata, flags, rc):
-    print("connected")
+    print("Admin connected")
 
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(self, userdata, msg):
+    print(msg.payload.decode("utf-8"))
 
     received_message = json.loads(str(msg.payload.decode("utf-8")))
 

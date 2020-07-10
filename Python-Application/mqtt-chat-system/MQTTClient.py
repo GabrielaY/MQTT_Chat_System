@@ -2,7 +2,7 @@ import json
 import paho.mqtt.client as mqtt
 from datetime import datetime
 import ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
-from google.protobuf.json_format import MessageToDict, MessageToJson
+from google.protobuf.json_format import MessageToJson
 
 topics = ChatPrototypes.Topics()
 system_messages = ChatPrototypes.SystemMessages()
