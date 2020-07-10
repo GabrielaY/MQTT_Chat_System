@@ -1,37 +1,43 @@
 import json
-
 import paho.mqtt.client as mqtt
 from datetime import datetime
+import ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
+from google.protobuf.json_format import MessageToDict, MessageToJson
+
+topics = ChatPrototypes.Topics()
+system_messages = ChatPrototypes.SystemMessages()
+
+
+# Helper function for creating message
+def create_message(content, sender_name):
+    chat_message = ChatPrototypes.ChatMessage()
+    chat_message.content = content
+    chat_message.sender = sender_name
+    chat_message.timestamp = datetime.now().strftime("%T")
+    return MessageToJson(chat_message)
 
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    system_message = json.dumps({
-        "content": "connected",
-        "sender": client.client_id.decode("utf-8"),
-        "timestamp": datetime.now().strftime("%T")
-    })
-    client.publish("/chat/system", system_message)
+    print("Connected")
+    system_message = create_message(system_messages.connected_text, client_name)
+    client.publish(topics.system_topic, system_message)
 
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(self, userdata, msg):
     received_message = json.loads(str(msg.payload.decode("utf-8")))
 
-    if msg.topic == "/chat/" + client_name + "/response":
-        if received_message["content"] == "yes":
-            print("Joined group chat")
-            python_client.subscribe("/chat/messages")
+    if msg.topic == "/chat/" + client_name + "/response":  # /chat/response/ + client_name
+        if received_message["content"] == system_messages.approve_join_text:
+            print(system_messages.joined_text)
+            python_client.subscribe(topics.chat_topic)
             global group_response
             group_response = 1
         else:
-            print("Access denied!")
-            disconnect_message = json.dumps({
-                "content": "disconnected",
-                "sender": python_client.client_id.decode("utf-8"),
-                "timestamp": datetime.now().strftime("%T")
-            })
-            python_client.publish("/chat/system", disconnect_message)
+            print(system_messages.access_denied_text)
+            disconnect_message = create_message(system_messages.disconnected_text, client_name)
+            python_client.publish(topics.system_topic, disconnect_message)
             group_response = -1
 
     else:
@@ -49,12 +55,8 @@ python_client.subscribe("/chat/" + client_name + "/response")
 
 # Request group access
 group_response = 0
-message = json.dumps({
-    "content": "Join request",
-    "sender": python_client.client_id.decode("utf-8"),
-    "timestamp": datetime.now().strftime("%T")
-})
-python_client.publish("/chat/system/request", message)
+message = create_message(system_messages.request_join_text, client_name)
+python_client.publish(topics.system_request_topic, message)
 
 while not group_response:
     pass
@@ -65,19 +67,12 @@ if group_response == -1:
 while True:
     text = input()
     if text == "QUIT":
-        message = json.dumps({
-            "content": "disconnected",
-            "sender": python_client.client_id.decode("utf-8"),
-            "timestamp": datetime.now().strftime("%T")
-        })
-        python_client.publish("/chat/system", message)
+        message = create_message(system_messages.disconnected_text, client_name)
+        python_client.publish(topics.system_topic, message)
         break
-    message = json.dumps({
-        "content": text,
-        "sender": python_client.client_id.decode("utf-8"),
-        "timestamp": datetime.now().strftime("%T")
-    })
-    python_client.publish("/chat/messages", message)
+
+    message = create_message(text, client_name)
+    python_client.publish(topics.chat_topic, message)
 
 python_client.disconnect()
 python_client.loop_stop()

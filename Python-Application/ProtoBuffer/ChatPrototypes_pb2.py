@@ -16,7 +16,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x14\x43hatPrototypes.proto\x12\x07message\"A\n\x0b\x43hatMessage\x12\x0e\n\x06sender\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x02(\t\x12\x11\n\ttimestamp\x18\x03 \x02(\t\"\x84\x01\n\x06Topics\x12\"\n\nchat_topic\x18\x01 \x01(\t:\x0e/chat/messages\x12\"\n\x0csystem_topic\x18\x02 \x01(\t:\x0c/chat/system\x12\x32\n\x14system_request_topic\x18\x03 \x01(\t:\x14/chat/system/request\"\xb0\x01\n\x0eSystemMessages\x12!\n\x0e\x63onnected_text\x18\x01 \x01(\t:\tconnected\x12\'\n\x11\x64isconnected_text\x18\x02 \x01(\t:\x0c\x64isconnected\x12&\n\x0bjoined_text\x18\x03 \x01(\t:\x11Joined group chat\x12*\n\x12\x61\x63\x63\x65ss_denied_text\x18\x04 \x01(\t:\x0e\x41\x63\x63\x65ss denied!'
+  serialized_pb=b'\n\x14\x43hatPrototypes.proto\x12\x07message\"A\n\x0b\x43hatMessage\x12\x0e\n\x06sender\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x02(\t\x12\x11\n\ttimestamp\x18\x03 \x02(\t\"\x84\x01\n\x06Topics\x12\"\n\nchat_topic\x18\x01 \x01(\t:\x0e/chat/messages\x12\"\n\x0csystem_topic\x18\x02 \x01(\t:\x0c/chat/system\x12\x32\n\x14system_request_topic\x18\x03 \x01(\t:\x14/chat/system/request\"\x95\x02\n\x0eSystemMessages\x12!\n\x0e\x63onnected_text\x18\x01 \x01(\t:\tconnected\x12\'\n\x11\x64isconnected_text\x18\x02 \x01(\t:\x0c\x64isconnected\x12&\n\x0bjoined_text\x18\x03 \x01(\t:\x11Joined group chat\x12*\n\x12\x61\x63\x63\x65ss_denied_text\x18\x04 \x01(\t:\x0e\x41\x63\x63\x65ss denied!\x12\'\n\x11request_join_text\x18\x05 \x01(\t:\x0cJoin request\x12\x1e\n\x11\x61pprove_join_text\x18\x06 \x01(\t:\x03yes\x12\x1a\n\x0e\x64\x65ny_join_text\x18\x07 \x01(\t:\x02no'
 )
 
 
@@ -150,6 +150,27 @@ _SYSTEMMESSAGES = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='request_join_text', full_name='message.SystemMessages.request_join_text', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=True, default_value=b"Join request".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='approve_join_text', full_name='message.SystemMessages.approve_join_text', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=True, default_value=b"yes".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='deny_join_text', full_name='message.SystemMessages.deny_join_text', index=6,
+      number=7, type=9, cpp_type=9, label=1,
+      has_default_value=True, default_value=b"no".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -163,7 +184,7 @@ _SYSTEMMESSAGES = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=236,
-  serialized_end=412,
+  serialized_end=513,
 )
 
 DESCRIPTOR.message_types_by_name['ChatMessage'] = _CHATMESSAGE
