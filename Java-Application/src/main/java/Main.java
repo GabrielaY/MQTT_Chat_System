@@ -1,21 +1,22 @@
+import message.ChatPrototypes;
+
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        // Constants
-        final String systemTopic = "/chat/system";
-        final String systemRequestTopic = "/chat/system/request";
-        final String connectionMessage = "connected";
-        final String messageTopic = "/chat/messages";
-        final String disconnectionMessage = "disconnected";
-        final int defaultQualityOfService = 0;
+        // Get topics and system messages
+        ChatPrototypes.Topics topics = ChatPrototypes.Topics.getDefaultInstance();
+        ChatPrototypes.SystemMessages systemMessages = ChatPrototypes.SystemMessages.getDefaultInstance();
+
+        // Used so that the main can wait for the admin to respond to the join request
         Object syncObject = new Object();
 
         // Broker info
@@ -42,50 +43,63 @@ public class Main {
 
             // Connect to broker and publish to administrator
             client.connect(options);
-            Message connectedMessage = new Message(systemTopic, connectionMessage, defaultQualityOfService, clientId);
-            MessageDispatcher.sendMessage(client, connectedMessage);
+            ChatPrototypes.ChatMessage connectedMessage = ChatPrototypes.ChatMessage.newBuilder()
+                    .setContent(systemMessages.getConnectedText())
+                    .setSender(clientId)
+                    .setTimestamp(MessageInitializer.generateTimeStamp())
+                    .build();
+            MessageDispatcher.sendMessage(client, topics.getSystemTopic(), MessageInitializer.generateMqttMessage(connectedMessage));
 
             // Subscribe to response topic
-            client.subscribe(responseTopic, (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(),client, syncObject));
+            client.subscribe(responseTopic, (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(), client, syncObject));
 
             // Try to join group topic
-            final String requestAccessMessage = "Join request";
-            Message requestMessage = new Message(systemRequestTopic, requestAccessMessage, defaultQualityOfService, clientId);
-            MessageDispatcher.sendMessage(client, requestMessage);
+            ChatPrototypes.ChatMessage requestMessage = ChatPrototypes.ChatMessage.newBuilder()
+                    .setContent(systemMessages.getRequestJoinText())
+                    .setSender(clientId)
+                    .setTimestamp(MessageInitializer.generateTimeStamp())
+                    .build();
+            MessageDispatcher.sendMessage(client, topics.getSystemRequestTopic(), MessageInitializer.generateMqttMessage(requestMessage));
 
             // Wait for response
-            synchronized(syncObject) {
+            synchronized (syncObject) {
                 try {
                     syncObject.wait();
                 } catch (InterruptedException e) {
-                    // Happens if someone interrupts your thread.
+                    e.printStackTrace();
                 }
             }
-            while(scanner.hasNextLine()) {
+
+            while (scanner.hasNextLine()) {
                 // Read message from System.in
                 String messageToBeSent = scanner.nextLine();
 
                 // Check if user has finished chatting
-                if(messageToBeSent.equals("QUIT")) {
+                if (messageToBeSent.equals("QUIT")) {
                     // Disconnect and publish to administrator
-                    Message disconnectMessage = new Message(systemTopic, disconnectionMessage, defaultQualityOfService, clientId);
-                    MessageDispatcher.sendMessage(client, disconnectMessage);
+                    ChatPrototypes.ChatMessage disconnectMessage = ChatPrototypes.ChatMessage.newBuilder()
+                            .setContent(systemMessages.getDisconnectedText())
+                            .setSender(clientId)
+                            .setTimestamp(MessageInitializer.generateTimeStamp())
+                            .build();
+                    MessageDispatcher.sendMessage(client, topics.getSystemTopic(), MessageInitializer.generateMqttMessage(disconnectMessage));
                     client.disconnect();
                     System.exit(0);
                 }
 
                 // Create and publish message
-                Message message = new Message(messageTopic, messageToBeSent, defaultQualityOfService, clientId);
-                MessageDispatcher.sendMessage(client, message);
+                ChatPrototypes.ChatMessage message = ChatPrototypes.ChatMessage.newBuilder()
+                        .setContent(messageToBeSent)
+                        .setSender(clientId)
+                        .setTimestamp(MessageInitializer.generateTimeStamp())
+                        .build();
+                MessageDispatcher.sendMessage(client, topics.getChatTopic(), MessageInitializer.generateMqttMessage(message));
 
             }
-
         } catch (MqttException e) {
             System.out.println("Cause -> " + e.getCause());
-            System.out.println("Reason Code -> " + e.getReasonCode());
             System.out.println("Message -> " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 }

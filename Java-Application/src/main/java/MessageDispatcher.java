@@ -1,17 +1,22 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import message.ChatPrototypes;
+
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.lang.reflect.Type;
-import java.util.Map;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class MessageDispatcher {
 
+    // Get topics and system messages
+    private static final ChatPrototypes.Topics topics =  ChatPrototypes.Topics.getDefaultInstance();
+    private static final ChatPrototypes.SystemMessages systemMessages = ChatPrototypes.SystemMessages.getDefaultInstance();
+
     // Send message
-    public static void sendMessage(MqttClient client, Message message) {
+    public static void sendMessage(MqttClient client, String topic, MqttMessage message) {
         try {
-            client.publish(message.getTopic(), message.getMessage());
+            client.publish(topic, message);
         } catch (MqttException e) {
             System.out.println("Cause -> " + e.getCause());
             System.out.println("Message -> " + e.getMessage());
@@ -21,27 +26,36 @@ public class MessageDispatcher {
     }
 
     // Receive message
-    public static void receiveMessage(String msg_topic, String payload_message, MqttClient client, Object syncObject) throws MqttException {
-        Type typeOfHashMap = new TypeToken<Map<String, String>>(){}.getType();
-        Map<String, String> messageInfo = new Gson().fromJson(payload_message, typeOfHashMap);
-        if(msg_topic.equals("/chat/" + client.getClientId() + "/response")){
-            if(messageInfo.get("content").equals("yes")){
-                System.out.println("Joined group chat");
-                client.subscribe("/chat/messages", (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(),client, syncObject));
+    public static void receiveMessage(String topic, String payload, MqttClient client, Object syncObject) throws MqttException, InvalidProtocolBufferException {
+        // Get message from payload
+        ChatPrototypes.ChatMessage.Builder builder = ChatPrototypes.ChatMessage.newBuilder();
+        JsonFormat.parser().merge(payload, builder);
+        ChatPrototypes.ChatMessage message = builder.build();
+
+        if (topic.equals("/chat/" + client.getClientId() + "/response")){
+
+            if (message.getContent().equals(systemMessages.getApproveJoinText())){
+                System.out.println(systemMessages.getJoinedText());
+                client.subscribe(topics.getChatTopic(), (tpc, msg) -> MessageDispatcher.receiveMessage(tpc, msg.toString(), client, syncObject));
                 synchronized(syncObject) {
                     syncObject.notify();
                 }
             }
+
             else {
                 System.out.println("Access denied!");
-                Message disconnectMessage = new Message("/chat/system", "disconnected", 0, client.getClientId());
-                MessageDispatcher.sendMessage(client, disconnectMessage);
+                ChatPrototypes.ChatMessage disconnectMessage = ChatPrototypes.ChatMessage.newBuilder()
+                        .setContent(systemMessages.getDisconnectedText())
+                        .setSender(client.getClientId())
+                        .setTimestamp(MessageInitializer.generateTimeStamp())
+                        .build();
+                MessageDispatcher.sendMessage(client, topics.getSystemTopic(), MessageInitializer.generateMqttMessage(disconnectMessage));
                 client.disconnect();
                 System.exit(-1);
             }
         }
-        else{
-            System.out.println(messageInfo.get("sender") + ": " + messageInfo.get("content") + " " + messageInfo.get("timestamp"));
+        else {
+            System.out.println(message.getSender() + ": " + message.getContent() + " " + message.getTimestamp());
         }
     }
 
