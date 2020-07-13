@@ -1,7 +1,7 @@
 import json
 import paho.mqtt.client as mqtt
 from datetime import datetime
-import mqtt_chat_library.Proto_Buff as ChatPrototypes
+import mqtt_chat_library.ChatPrototypes_pb2 as ChatPrototypes
 from google.protobuf.json_format import MessageToJson
 
 response_for_join_request = 0
