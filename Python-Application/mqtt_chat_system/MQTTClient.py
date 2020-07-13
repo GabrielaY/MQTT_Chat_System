@@ -1,7 +1,7 @@
 import json
 import paho.mqtt.client as mqtt
 from datetime import datetime
-import mqtt_chat_system.ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
+import ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
 from google.protobuf.json_format import MessageToJson
 
 topics = ChatPrototypes.Topics()
