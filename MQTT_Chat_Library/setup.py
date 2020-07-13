@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='MQTT_chat_helpers',
+    name='mqtt-chat-library',
     version='1.0',
     packages=['mqtt_chat_library'],
     url='https://   github.com/GabrielaY/MQTT_Chat_System',
