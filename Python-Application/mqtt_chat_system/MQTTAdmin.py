@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 import paho.mqtt.client as mqtt
-import ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
+import mqtt_chat_system.ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
 from google.protobuf.json_format import MessageToJson
 
 # from MQTTClient import topics, system_messages, create_message
@@ -14,6 +14,7 @@ system_messages = ChatPrototypes.SystemMessages()
 def create_message(content, sender_name):
     chat_message = ChatPrototypes.ChatMessage()
     chat_message.content = content
+    chat_message.sender = sender_name
     chat_message.timestamp = datetime.now().strftime("%T")
     return MessageToJson(chat_message)
 
