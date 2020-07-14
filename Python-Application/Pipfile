@@ -9,6 +9,7 @@ verify_ssl = true
 paho-mqtt = "*"
 google = "*"
 protobuf = "*"
+mqtt-chat-library = {git = "https://github.com/GabrielaY/MQTT_Chat_System.git", subdirectory = "MQTT_Chat_Library"}
 
 [requires]
 python_version = "3.7"
