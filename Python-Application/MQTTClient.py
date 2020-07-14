@@ -12,7 +12,7 @@ python_client.on_message = MqttChatLibrary.client_on_message
 
 # Connect client
 python_client.connect("mqtt.eclipse.org", 1883, 60)
-python_client.subscribe("/chat/" + client_name + "/response")
+python_client.subscribe(topics.system_response_topic + client_name)
 python_client.loop_start()
 
 # Request group access

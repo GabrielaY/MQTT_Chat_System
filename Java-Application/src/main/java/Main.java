@@ -29,7 +29,7 @@ public class Main {
         // Client info
         System.out.println("Enter username: ");
         String clientId = scanner.nextLine();
-        final String responseTopic = "/chat/" + clientId + "/response";
+        final String responseTopic = topics.getSystemResponseTopic() + clientId;
 
         try {
             // Create client
