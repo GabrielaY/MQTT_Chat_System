@@ -35,7 +35,8 @@ def client_on_message(client, userdata, msg):
     received_message = json.loads(str(msg.payload.decode("utf-8")))
     client_id = client._client_id.decode("utf-8")
 
-    if msg.topic == topics.system_response_topic + client_id
+    if msg.topic == topics.system_response_topic + client_id:
+        
         global response_for_join_request
         if received_message["content"] == system_messages.approve_join_text:
             print(system_messages.joined_text)
@@ -62,6 +63,7 @@ def admin_on_message(client, userdata, msg):
     client_id = client._client_id.decode("utf-8")
 
     if msg.topic == topics.system_request_topic:
+
         if received_message["sender"][:1] == "a":
             response = create_message(system_messages.approve_join_text, client_id)
         else:
