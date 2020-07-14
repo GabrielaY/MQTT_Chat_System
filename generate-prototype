@@ -1,0 +1,9 @@
+#!/bin/bash
+
+PROTO_SRC_DIR="./"
+PROTO_SRC_NAME="ChatPrototypes.proto"
+PROTO_DEST_JAVA="Java-Application/src/main/java/"
+PROTO_DEST_PYTHON="MQTT_Chat_Library/mqtt_chat_library/"
+
+$(protoc --proto_path=$PROTO_SRC_DIR --java_out=$PROTO_DEST_JAVA $PROTO_SRC_NAME)
+$(protoc --proto_path=$PROTO_SRC_DIR --python_out=$PROTO_DEST_PYTHON $PROTO_SRC_NAME)
