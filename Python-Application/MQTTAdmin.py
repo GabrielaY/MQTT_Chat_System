@@ -1,54 +1,14 @@
-from datetime import datetime
-import json
 import paho.mqtt.client as mqtt
-import mqtt_chat_system.ProtoBuffer.ChatPrototypes_pb2 as ChatPrototypes
-from google.protobuf.json_format import MessageToJson
+import mqtt_chat_library.mqtt_chat_library as MqttChatLibrary
 
-# from MQTTClient import topics, system_messages, create_message
+topics = MqttChatLibrary.topics
 
-topics = ChatPrototypes.Topics()
-system_messages = ChatPrototypes.SystemMessages()
-
-
-# Helper function for creating message
-def create_message(content, sender_name):
-    chat_message = ChatPrototypes.ChatMessage()
-    chat_message.content = content
-    chat_message.sender = sender_name
-    chat_message.timestamp = datetime.now().strftime("%T")
-    return MessageToJson(chat_message)
-
-
-# The callback for when the admin receives a CONNACK response from the server.
-def on_connect(self, userdata, flags, rc):
-    print("Admin connected")
-
-
-# The callback for when a PUBLISH message is received from the server.
-def on_message(self, userdata, msg):
-    print(msg.payload.decode("utf-8"))
-
-    received_message = json.loads(str(msg.payload.decode("utf-8")))
-
-    if msg.topic == topics.system_request_topic:
-
-        if received_message["sender"][:1] == "a":
-            response = create_message(system_messages.approve_join_text, None)
-
-        else:
-            response = create_message(system_messages.deny_join_text, None)
-
-        response_topic = "/chat/" + received_message["sender"] + "/response"
-        admin.publish(response_topic, response)
-
-    else:
-        print(received_message["sender"] + ": " + received_message["content"] + " " + received_message["timestamp"])
-
-
+# Create admin
 admin = mqtt.Client("Admin", True, None, mqtt.MQTTv31)
-admin.on_connect = on_connect
-admin.on_message = on_message
+admin.on_connect = MqttChatLibrary.admin_on_connect
+admin.on_message = MqttChatLibrary.admin_on_message
 
+# Connect admin
 admin.connect("mqtt.eclipse.org", 1883, 60)
 admin.subscribe(topics.system_topic)
 admin.subscribe(topics.system_request_topic)
