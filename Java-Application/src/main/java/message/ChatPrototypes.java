@@ -1052,6 +1052,23 @@ public final class ChatPrototypes {
      */
     com.google.protobuf.ByteString
         getSystemRequestTopicBytes();
+
+    /**
+     * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+     * @return Whether the systemResponseTopic field is set.
+     */
+    boolean hasSystemResponseTopic();
+    /**
+     * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+     * @return The systemResponseTopic.
+     */
+    java.lang.String getSystemResponseTopic();
+    /**
+     * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+     * @return The bytes for systemResponseTopic.
+     */
+    com.google.protobuf.ByteString
+        getSystemResponseTopicBytes();
   }
   /**
    * Protobuf type {@code message.Topics}
@@ -1069,6 +1086,7 @@ public final class ChatPrototypes {
       chatTopic_ = "/chat/messages";
       systemTopic_ = "/chat/system";
       systemRequestTopic_ = "/chat/system/request";
+      systemResponseTopic_ = "/chat/response/";
     }
 
     @java.lang.Override
@@ -1118,6 +1136,12 @@ public final class ChatPrototypes {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
               systemRequestTopic_ = bs;
+              break;
+            }
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000008;
+              systemResponseTopic_ = bs;
               break;
             }
             default: {
@@ -1297,6 +1321,54 @@ public final class ChatPrototypes {
       }
     }
 
+    public static final int SYSTEM_RESPONSE_TOPIC_FIELD_NUMBER = 4;
+    private volatile java.lang.Object systemResponseTopic_;
+    /**
+     * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+     * @return Whether the systemResponseTopic field is set.
+     */
+    @java.lang.Override
+    public boolean hasSystemResponseTopic() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+     * @return The systemResponseTopic.
+     */
+    @java.lang.Override
+    public java.lang.String getSystemResponseTopic() {
+      java.lang.Object ref = systemResponseTopic_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          systemResponseTopic_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+     * @return The bytes for systemResponseTopic.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getSystemResponseTopicBytes() {
+      java.lang.Object ref = systemResponseTopic_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        systemResponseTopic_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1320,6 +1392,9 @@ public final class ChatPrototypes {
       if (((bitField0_ & 0x00000004) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, systemRequestTopic_);
       }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, systemResponseTopic_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1337,6 +1412,9 @@ public final class ChatPrototypes {
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, systemRequestTopic_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, systemResponseTopic_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1368,6 +1446,11 @@ public final class ChatPrototypes {
         if (!getSystemRequestTopic()
             .equals(other.getSystemRequestTopic())) return false;
       }
+      if (hasSystemResponseTopic() != other.hasSystemResponseTopic()) return false;
+      if (hasSystemResponseTopic()) {
+        if (!getSystemResponseTopic()
+            .equals(other.getSystemResponseTopic())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1390,6 +1473,10 @@ public final class ChatPrototypes {
       if (hasSystemRequestTopic()) {
         hash = (37 * hash) + SYSTEM_REQUEST_TOPIC_FIELD_NUMBER;
         hash = (53 * hash) + getSystemRequestTopic().hashCode();
+      }
+      if (hasSystemResponseTopic()) {
+        hash = (37 * hash) + SYSTEM_RESPONSE_TOPIC_FIELD_NUMBER;
+        hash = (53 * hash) + getSystemResponseTopic().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1530,6 +1617,8 @@ public final class ChatPrototypes {
         bitField0_ = (bitField0_ & ~0x00000002);
         systemRequestTopic_ = "/chat/system/request";
         bitField0_ = (bitField0_ & ~0x00000004);
+        systemResponseTopic_ = "/chat/response/";
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1570,6 +1659,10 @@ public final class ChatPrototypes {
           to_bitField0_ |= 0x00000004;
         }
         result.systemRequestTopic_ = systemRequestTopic_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.systemResponseTopic_ = systemResponseTopic_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1632,6 +1725,11 @@ public final class ChatPrototypes {
         if (other.hasSystemRequestTopic()) {
           bitField0_ |= 0x00000004;
           systemRequestTopic_ = other.systemRequestTopic_;
+          onChanged();
+        }
+        if (other.hasSystemResponseTopic()) {
+          bitField0_ |= 0x00000008;
+          systemResponseTopic_ = other.systemResponseTopic_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1912,6 +2010,90 @@ public final class ChatPrototypes {
   }
   bitField0_ |= 0x00000004;
         systemRequestTopic_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object systemResponseTopic_ = "/chat/response/";
+      /**
+       * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+       * @return Whether the systemResponseTopic field is set.
+       */
+      public boolean hasSystemResponseTopic() {
+        return ((bitField0_ & 0x00000008) != 0);
+      }
+      /**
+       * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+       * @return The systemResponseTopic.
+       */
+      public java.lang.String getSystemResponseTopic() {
+        java.lang.Object ref = systemResponseTopic_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            systemResponseTopic_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+       * @return The bytes for systemResponseTopic.
+       */
+      public com.google.protobuf.ByteString
+          getSystemResponseTopicBytes() {
+        java.lang.Object ref = systemResponseTopic_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          systemResponseTopic_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+       * @param value The systemResponseTopic to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSystemResponseTopic(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        systemResponseTopic_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSystemResponseTopic() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        systemResponseTopic_ = getDefaultInstance().getSystemResponseTopic();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string system_response_topic = 4 [default = "/chat/response/"];</code>
+       * @param value The bytes for systemResponseTopic to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSystemResponseTopicBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        systemResponseTopic_ = value;
         onChanged();
         return this;
       }
@@ -3692,17 +3874,19 @@ public final class ChatPrototypes {
     java.lang.String[] descriptorData = {
       "\n\024ChatPrototypes.proto\022\007message\"A\n\013ChatM" +
       "essage\022\016\n\006sender\030\001 \001(\t\022\017\n\007content\030\002 \002(\t\022" +
-      "\021\n\ttimestamp\030\003 \002(\t\"\204\001\n\006Topics\022\"\n\nchat_to" +
+      "\021\n\ttimestamp\030\003 \002(\t\"\264\001\n\006Topics\022\"\n\nchat_to" +
       "pic\030\001 \001(\t:\016/chat/messages\022\"\n\014system_topi" +
       "c\030\002 \001(\t:\014/chat/system\0222\n\024system_request_" +
-      "topic\030\003 \001(\t:\024/chat/system/request\"\225\002\n\016Sy" +
-      "stemMessages\022!\n\016connected_text\030\001 \001(\t:\tco" +
-      "nnected\022\'\n\021disconnected_text\030\002 \001(\t:\014disc" +
-      "onnected\022&\n\013joined_text\030\003 \001(\t:\021Joined gr" +
-      "oup chat\022*\n\022access_denied_text\030\004 \001(\t:\016Ac" +
-      "cess denied!\022\'\n\021request_join_text\030\005 \001(\t:" +
-      "\014Join request\022\036\n\021approve_join_text\030\006 \001(\t" +
-      ":\003yes\022\032\n\016deny_join_text\030\007 \001(\t:\002no"
+      "topic\030\003 \001(\t:\024/chat/system/request\022.\n\025sys" +
+      "tem_response_topic\030\004 \001(\t:\017/chat/response" +
+      "/\"\225\002\n\016SystemMessages\022!\n\016connected_text\030\001" +
+      " \001(\t:\tconnected\022\'\n\021disconnected_text\030\002 \001" +
+      "(\t:\014disconnected\022&\n\013joined_text\030\003 \001(\t:\021J" +
+      "oined group chat\022*\n\022access_denied_text\030\004" +
+      " \001(\t:\016Access denied!\022\'\n\021request_join_tex" +
+      "t\030\005 \001(\t:\014Join request\022\036\n\021approve_join_te" +
+      "xt\030\006 \001(\t:\003yes\022\032\n\016deny_join_text\030\007 \001(\t:\002n" +
+      "o"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -3719,7 +3903,7 @@ public final class ChatPrototypes {
     internal_static_message_Topics_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_message_Topics_descriptor,
-        new java.lang.String[] { "ChatTopic", "SystemTopic", "SystemRequestTopic", });
+        new java.lang.String[] { "ChatTopic", "SystemTopic", "SystemRequestTopic", "SystemResponseTopic", });
     internal_static_message_SystemMessages_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_message_SystemMessages_fieldAccessorTable = new

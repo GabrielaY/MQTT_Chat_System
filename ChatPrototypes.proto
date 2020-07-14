@@ -12,6 +12,7 @@ message Topics {
   optional string chat_topic = 1 [default = "/chat/messages"];
   optional string system_topic = 2 [default = "/chat/system"];
   optional string system_request_topic = 3 [default = "/chat/system/request"];
+  optional string system_response_topic = 4 [default = "/chat/response/"];
 }
 
 message SystemMessages {

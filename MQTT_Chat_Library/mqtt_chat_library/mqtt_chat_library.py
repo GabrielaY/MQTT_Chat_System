@@ -34,8 +34,8 @@ def client_on_connect(client, userdata, flags, rc):
 def client_on_message(client, userdata, msg):
     received_message = json.loads(str(msg.payload.decode("utf-8")))
     client_id = client._client_id.decode("utf-8")
-    
-    if msg.topic == "/chat/" + client_id + "/response":  # /chat/response/ + client_name
+
+    if msg.topic == topics.system_response_topic + client_id
         global response_for_join_request
         if received_message["content"] == system_messages.approve_join_text:
             print(system_messages.joined_text)
@@ -67,7 +67,7 @@ def admin_on_message(client, userdata, msg):
         else:
             response = create_message(system_messages.deny_join_text, client_id)
 
-        response_topic = "/chat/" + received_message["sender"] + "/response"
+        response_topic = topics.system_response_topic + received_message["sender"]
         client.publish(response_topic, response)
 
     else:

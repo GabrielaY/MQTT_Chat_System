@@ -31,8 +31,8 @@ public class MessageDispatcher {
         ChatPrototypes.ChatMessage.Builder builder = ChatPrototypes.ChatMessage.newBuilder();
         JsonFormat.parser().merge(payload, builder);
         ChatPrototypes.ChatMessage message = builder.build();
-
-        if (topic.equals("/chat/" + client.getClientId() + "/response")){
+        
+        if (topic.equals(topics.getSystemResponseTopic() + client.getClientId())) {
 
             if (message.getContent().equals(systemMessages.getApproveJoinText())){
                 System.out.println(systemMessages.getJoinedText());
