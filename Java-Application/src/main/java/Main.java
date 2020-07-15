@@ -12,6 +12,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        // Configure path for logger
+        if (args.length == 1) {
+            MQTTChatLogger.createLogFile(args[0]);
+        }
+
         // Get topics and system messages
         ChatPrototypes.Topics topics = ChatPrototypes.Topics.getDefaultInstance();
         ChatPrototypes.SystemMessages systemMessages = ChatPrototypes.SystemMessages.getDefaultInstance();
@@ -49,6 +54,7 @@ public class Main {
                     .setTimestamp(MessageInitializer.generateTimeStamp())
                     .build();
             MessageDispatcher.sendMessage(client, topics.getSystemTopic(), MessageInitializer.generateMqttMessage(connectedMessage));
+            MQTTChatLogger.makeInfoLog(client.getClientId() + " -> " + systemMessages.getConnectedText());
 
             // Subscribe to response topic
             client.subscribe(responseTopic, (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(), client, syncObject));
