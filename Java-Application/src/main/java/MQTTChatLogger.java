@@ -11,8 +11,8 @@ public class MQTTChatLogger {
 
     private static boolean path = false;
 
-    public static void setPathToLog(String pathToLogs) {
-        MQTTChatLogger.pathToLog = pathToLogs;
+    public static void setPathToLog(String pathToLog) {
+        MQTTChatLogger.pathToLog = pathToLog;
     }
 
     public static void setHasPath(boolean hasPath) {
