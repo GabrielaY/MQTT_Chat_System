@@ -36,6 +36,7 @@ public class MessageDispatcher {
 
             if (message.getContent().equals(systemMessages.getApproveJoinText())){
                 System.out.println(systemMessages.getJoinedText());
+                MQTTChatLogger.makeInfoLog(client.getClientId() + " -> " + systemMessages.getJoinedText());
                 client.subscribe(topics.getChatTopic(), (tpc, msg) -> MessageDispatcher.receiveMessage(tpc, msg.toString(), client, syncObject));
                 synchronized(syncObject) {
                     syncObject.notify();
@@ -43,7 +44,8 @@ public class MessageDispatcher {
             }
 
             else {
-                System.out.println("Access denied!");
+                System.out.println(systemMessages.getAccessDeniedText());
+                MQTTChatLogger.makeErrorLog(client.getClientId() + " -> " + systemMessages.getAccessDeniedText());
                 ChatPrototypes.ChatMessage disconnectMessage = ChatPrototypes.ChatMessage.newBuilder()
                         .setContent(systemMessages.getDisconnectedText())
                         .setSender(client.getClientId())
@@ -51,6 +53,7 @@ public class MessageDispatcher {
                         .build();
                 MessageDispatcher.sendMessage(client, topics.getSystemTopic(), MessageInitializer.generateMqttMessage(disconnectMessage));
                 client.disconnect();
+                MQTTChatLogger.makeErrorLog(client.getClientId() + " -> " + systemMessages.getDisconnectedText());
                 System.exit(-1);
             }
         }
