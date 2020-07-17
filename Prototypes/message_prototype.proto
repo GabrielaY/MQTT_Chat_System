@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package message;
+package chat_message;
 
 message ChatMessage {
   optional string sender = 1;

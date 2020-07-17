@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package system_messages;
+
+message SystemMessages {
+  optional string connected_text = 1 [default = "connected"];
+  optional string disconnected_text = 2 [default = "disconnected"];
+  optional string joined_text = 3 [default = "Joined group chat"];
+  optional string access_denied_text = 4 [default = "Access denied!"];
+  optional string request_join_text = 5 [default = "Join request"];
+  optional string approve_join_text = 6 [default = "yes"];
+  optional string deny_join_text = 7 [default = "no"];
+}
