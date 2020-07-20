@@ -1,8 +1,12 @@
-**/.DS_Store
 **/.idea/*
+**/.DS_Store
+
 **/logs/*
 **/*.log
-java/**/target/*
+
 java/**/*.iml
+java/**/target/*
+
+**/__pycache__/*
+**/.pytest_cache/*
 python/Pipfile.lock
-python/**/__pycache__/*
