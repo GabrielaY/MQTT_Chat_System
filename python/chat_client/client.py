@@ -1,15 +1,14 @@
 import paho.mqtt.client as mqtt
 from logging import FileHandler
-import mqtt_chat_system.mqtt_chat_system as MqttChatLibrary
+import mqtt_chat_system.mqtt_chat_library as MqttChatLibrary
 from log_config import info_log, error_log
-
 
 topics = MqttChatLibrary.topics
 system_messages = MqttChatLibrary.system_messages
 
 # Choose logging method
 path_for_logging = input("Enter logging path: ")
-if path_for_logging != "default" and path_for_logging!="console":
+if path_for_logging != "default" and path_for_logging != "console":
     info_handling = FileHandler(path_for_logging + "/info.log", mode='a', encoding=None, delay=False)
     error_handling = FileHandler(path_for_logging + "/error.log", mode='a', encoding=None, delay=False)
     info_log.addHandler(info_handling)
