@@ -1,4 +1,6 @@
-import message.ChatPrototypes;
+import chat_topics.TopicsOuterClass;
+import chat_message.MessagePrototype;
+import system_messages.SystemMessagesOuterClass;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -18,8 +20,8 @@ public class Main {
         }
 
         // Get topics and system messages
-        ChatPrototypes.Topics topics = ChatPrototypes.Topics.getDefaultInstance();
-        ChatPrototypes.SystemMessages systemMessages = ChatPrototypes.SystemMessages.getDefaultInstance();
+        TopicsOuterClass.Topics topics = TopicsOuterClass.Topics.getDefaultInstance();
+        SystemMessagesOuterClass.SystemMessages systemMessages = SystemMessagesOuterClass.SystemMessages.getDefaultInstance();
 
         // Used so that the main can wait for the admin to respond to the join request
         Object syncObject = new Object();
@@ -48,7 +50,7 @@ public class Main {
 
             // Connect to broker and publish to administrator
             client.connect(options);
-            ChatPrototypes.ChatMessage connectedMessage = ChatPrototypes.ChatMessage.newBuilder()
+            MessagePrototype.ChatMessage connectedMessage = MessagePrototype.ChatMessage.newBuilder()
                     .setContent(systemMessages.getConnectedText())
                     .setSender(clientId)
                     .setTimestamp(MessageInitializer.generateTimeStamp())
@@ -60,7 +62,7 @@ public class Main {
             client.subscribe(responseTopic, (topic, message) -> MessageDispatcher.receiveMessage(topic, message.toString(), client, syncObject));
 
             // Try to join group topic
-            ChatPrototypes.ChatMessage requestMessage = ChatPrototypes.ChatMessage.newBuilder()
+            MessagePrototype.ChatMessage requestMessage = MessagePrototype.ChatMessage.newBuilder()
                     .setContent(systemMessages.getRequestJoinText())
                     .setSender(clientId)
                     .setTimestamp(MessageInitializer.generateTimeStamp())
@@ -83,7 +85,7 @@ public class Main {
                 // Check if user has finished chatting
                 if (messageToBeSent.equals("QUIT")) {
                     // Disconnect and publish to administrator
-                    ChatPrototypes.ChatMessage disconnectMessage = ChatPrototypes.ChatMessage.newBuilder()
+                    MessagePrototype.ChatMessage disconnectMessage = MessagePrototype.ChatMessage.newBuilder()
                             .setContent(systemMessages.getDisconnectedText())
                             .setSender(clientId)
                             .setTimestamp(MessageInitializer.generateTimeStamp())
@@ -94,7 +96,7 @@ public class Main {
                 }
 
                 // Create and publish message
-                ChatPrototypes.ChatMessage message = ChatPrototypes.ChatMessage.newBuilder()
+                MessagePrototype.ChatMessage message = MessagePrototype.ChatMessage.newBuilder()
                         .setContent(messageToBeSent)
                         .setSender(clientId)
                         .setTimestamp(MessageInitializer.generateTimeStamp())

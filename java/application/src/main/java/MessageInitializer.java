@@ -1,4 +1,4 @@
-import message.ChatPrototypes;
+import chat_message.MessagePrototype;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -19,7 +19,7 @@ public class MessageInitializer {
     }
 
     // Create content for the message to be sent
-    public static MqttMessage generateMqttMessage(ChatPrototypes.ChatMessage chatMessage) throws InvalidProtocolBufferException {
+    public static MqttMessage generateMqttMessage(MessagePrototype.ChatMessage chatMessage) throws InvalidProtocolBufferException {
         byte [] payload = JsonFormat.printer().print(chatMessage).getBytes();
         return new MqttMessage(payload);
     }

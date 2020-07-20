@@ -1,4 +1,6 @@
-import message.ChatPrototypes;
+import chat_topics.TopicsOuterClass;
+import chat_message.MessagePrototype;
+import system_messages.SystemMessagesOuterClass;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -10,8 +12,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 public class MessageDispatcher {
 
     // Get topics and system messages
-    private static final ChatPrototypes.Topics topics =  ChatPrototypes.Topics.getDefaultInstance();
-    private static final ChatPrototypes.SystemMessages systemMessages = ChatPrototypes.SystemMessages.getDefaultInstance();
+    private static final TopicsOuterClass.Topics topics =  TopicsOuterClass.Topics.getDefaultInstance();
+    private static final SystemMessagesOuterClass.SystemMessages systemMessages = SystemMessagesOuterClass.SystemMessages.getDefaultInstance();
 
     // Send message
     public static void sendMessage(MqttClient client, String topic, MqttMessage message) {
@@ -28,9 +30,9 @@ public class MessageDispatcher {
     // Receive message
     public static void receiveMessage(String topic, String payload, MqttClient client, Object syncObject) throws MqttException, InvalidProtocolBufferException {
         // Get message from payload
-        ChatPrototypes.ChatMessage.Builder builder = ChatPrototypes.ChatMessage.newBuilder();
+        MessagePrototype.ChatMessage.Builder builder = MessagePrototype.ChatMessage.newBuilder();
         JsonFormat.parser().merge(payload, builder);
-        ChatPrototypes.ChatMessage message = builder.build();
+        MessagePrototype.ChatMessage message = builder.build();
         
         if (topic.equals(topics.getSystemResponseTopic() + client.getClientId())) {
 
@@ -46,7 +48,7 @@ public class MessageDispatcher {
             else {
                 System.out.println(systemMessages.getAccessDeniedText());
                 MQTTChatLogger.makeErrorLog(client.getClientId() + " -> " + systemMessages.getAccessDeniedText());
-                ChatPrototypes.ChatMessage disconnectMessage = ChatPrototypes.ChatMessage.newBuilder()
+                MessagePrototype.ChatMessage disconnectMessage = MessagePrototype.ChatMessage.newBuilder()
                         .setContent(systemMessages.getDisconnectedText())
                         .setSender(client.getClientId())
                         .setTimestamp(MessageInitializer.generateTimeStamp())
