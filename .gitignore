@@ -1,6 +1,7 @@
 **/.DS_Store
 **/.idea/*
 **/logs/*
+**/*.log
 java/**/target/*
 java/**/*.iml
 Python-Application/Pipfile.lock
