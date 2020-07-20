@@ -1,9 +1,9 @@
 import json
 import paho.mqtt.client as mqtt
 from datetime import datetime
-import mqtt_chat_library.message_prototype_pb2 as MessagePrototypes
-import mqtt_chat_library.system_messages_pb2 as SystemMessages
-import mqtt_chat_library.topics_pb2 as Topics
+import mqtt_chat_system.message_prototype_pb2 as MessagePrototypes
+import mqtt_chat_system.system_messages_pb2 as SystemMessages
+import mqtt_chat_system.topics_pb2 as Topics
 from google.protobuf.json_format import MessageToJson
 
 response_for_join_request = 0

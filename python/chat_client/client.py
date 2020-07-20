@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 from logging import FileHandler
-import mqtt_chat_library.mqtt_chat_library as MqttChatLibrary
+import mqtt_chat_system.mqtt_chat_system as MqttChatLibrary
 from log_config import info_log, error_log
 
 
