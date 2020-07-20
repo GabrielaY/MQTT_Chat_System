@@ -4,5 +4,5 @@
 **/*.log
 java/**/target/*
 java/**/*.iml
-Python-Application/Pipfile.lock
-Python-Application/**/__pycache__/*
+python/Pipfile.lock
+python/**/__pycache__/*
