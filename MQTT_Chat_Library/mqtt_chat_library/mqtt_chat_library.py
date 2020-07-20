@@ -1,12 +1,14 @@
 import json
 import paho.mqtt.client as mqtt
 from datetime import datetime
-import mqtt_chat_library.ChatPrototypes_pb2 as ChatPrototypes
+import mqtt_chat_library.message_prototype_pb2 as MessagePrototypes
+import mqtt_chat_library.system_messages_pb2 as SystemMessages
+import mqtt_chat_library.topics_pb2 as Topics
 from google.protobuf.json_format import MessageToJson
 
 response_for_join_request = 0
-topics = ChatPrototypes.Topics()
-system_messages = ChatPrototypes.SystemMessages()
+topics = Topics.Topics()
+system_messages = SystemMessages.SystemMessages()
 
 
 def wait_for_response_for_join_request():
@@ -16,7 +18,7 @@ def wait_for_response_for_join_request():
 
 
 def create_message(content, sender_name):
-    chat_message = ChatPrototypes.ChatMessage()
+    chat_message = MessagePrototypes.ChatMessage()
     chat_message.content = content
     chat_message.sender = sender_name
     chat_message.timestamp = datetime.now().strftime("%T")
