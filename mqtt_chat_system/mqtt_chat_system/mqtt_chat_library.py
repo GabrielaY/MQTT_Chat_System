@@ -1,5 +1,4 @@
 import json
-import paho.mqtt.client as mqtt
 from datetime import datetime
 import mqtt_chat_system.message_prototype_pb2 as MessagePrototypes
 import mqtt_chat_system.system_messages_pb2 as SystemMessages
@@ -21,7 +20,7 @@ def create_message(content, sender_name):
     chat_message = MessagePrototypes.ChatMessage()
     chat_message.content = content
     chat_message.sender = sender_name
-    chat_message.timestamp = datetime.now().strftime("%T")
+    chat_message.timestamp = datetime.now().strftime("%H:%M:%S")
     return MessageToJson(chat_message)
 
 
