@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-from logging.handlers import RotatingFileHandler
+from logging import FileHandler
 import mqtt_chat_library.mqtt_chat_library as MqttChatLibrary
 from log_config import info_log, error_log
 
@@ -10,8 +10,8 @@ system_messages = MqttChatLibrary.system_messages
 # Choose logging method
 path_for_logging = input("Enter logging path: ")
 if path_for_logging != "default" and path_for_logging!="console":
-    info_handling = RotatingFileHandler(path_for_logging, maxBytes=1000, backupCount=1)
-    error_handling = RotatingFileHandler(path_for_logging, maxBytes=1000, backupCount=1)
+    info_handling = FileHandler(path_for_logging + "/info.log", mode='a', encoding=None, delay=False)
+    error_handling = FileHandler(path_for_logging + "/error.log", mode='a', encoding=None, delay=False)
     info_log.addHandler(info_handling)
     error_log.addHandler(error_handling)
 
