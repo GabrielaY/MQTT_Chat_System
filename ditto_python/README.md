@@ -1,0 +1,1 @@
+Deliver a client SDK for Python in order to interact with digital twins provided by an Eclipse Ditto backend.
